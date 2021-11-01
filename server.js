@@ -21,6 +21,12 @@ const db = mysql.createConnection(
     console.log('Connected to the election database')
 );
 
+//run SQL query to select all data from table; two variables are used: 
+//err - for errors and rows - for the query response
+db.query(`SELECT * FROM candidates`, (err, rows) => {
+    console.log(rows);
+});
+
 //Default response for any other request (Not Found) - MUST BE PLACED LAST
 app.use((req, res) => {
     res.status(404).end();
