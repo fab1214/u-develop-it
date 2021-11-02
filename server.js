@@ -26,7 +26,12 @@ const db = mysql.createConnection(
 //set api endpoint
 app.get("/api/candidates", (req, res) => {
   //database call - run SQL query to select all data from table
-  const sql = `SELECT * FROM candidates`;
+  const sql = `SELECT candidates.*, parties.name
+               AS party_name
+               FROM candidates
+               LEFT JOIN parties
+               ON candidates.party_id = parties.id`;
+
   // two variables are used: err - for errors and rows - for the query response
   db.query(sql, (err, rows) => {
     //if theres an error, send 505 message
@@ -44,7 +49,12 @@ app.get("/api/candidates", (req, res) => {
 
 //Get a single candidate
 app.get("/api/candidate/:id", (req, res) => {
-  const sql = `SELECT * FROM candidates WHERE id = ?`;
+  const sql = `SELECT candidates.*, parties.name
+               AS party_name
+               FROM candidates
+               LEFT JOIN parties
+               ON candidates.party_id = parties.id
+               WHERE candidates.id = ?`;
   //always set params when using ? placeholder
   const params = [req.params.id];
 
@@ -68,7 +78,7 @@ app.delete('/api/candidate/:id', (req, res) => {
     db.query(sql, params, (err, result) => {
         if(err){
             //why error: res.message and not err.message like previous code above?
-            res.status(400).json({ error: res.message});
+            res.status(400).json({ error: err.message });
             return;
             //if id doesnt exist
         }else if(!result.affectedRows) {
