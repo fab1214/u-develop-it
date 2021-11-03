@@ -4,7 +4,6 @@ const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
 //Get all candidates
-//set api endpoint
 router.get("/candidates", (req, res) => {
     //database call - run SQL query to select all data from table
     const sql = `SELECT candidates.*, parties.name
@@ -60,7 +59,6 @@ router.get("/candidates", (req, res) => {
           if(err){
               //why error: res.message and not err.message like previous code above?
               res.status(400).json({ error: err.message });
-              return;
               //if id doesnt exist
           }else if(!result.affectedRows) {
               res.json({
